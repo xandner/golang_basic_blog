@@ -1,0 +1,5 @@
+app:
+  name: "Blog"
+server:
+  host: "localhost"
+  port: "8080"
