@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"blog/config"
+	"blog/pkg/config"
 	"fmt"
 	"net/http"
 
@@ -24,7 +24,8 @@ var serveCmd = &cobra.Command{
 }
 
 func serve() {
-	configs := configSet()
+	config.Set()
+	configs := config.Get()
 
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
@@ -34,20 +35,4 @@ func serve() {
 		})
 	})
 	r.Run(fmt.Sprintf("%s:%s", configs.Server.Host, configs.Server.Port))
-}
-
-func configSet() config.Config {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yml")
-	viper.AddConfigPath("config")
-	if err := viper.ReadInConfig(); err != nil {
-		panic("Config not found")
-	}
-
-	var configs config.Config
-	err := viper.Unmarshal(&configs)
-	if err != nil {
-		fmt.Printf("config error: ,%v", err)
-	}
-	return configs
 }
